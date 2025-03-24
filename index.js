@@ -40,7 +40,7 @@ app.get(`/oauth/callback`, async (req, res) => {
 			code: authorizationCode,
 			client_id: process.env.GOOGLE_CLIENT_ID,
 			client_secret: process.env.GOOGLE_CLIENT_SECRET,
-			redirect_uri: `http://${process.env.REDIRECT_URI_DOMAIN}/oauth/callback`,
+			redirect_uri: `${process.env.REDIRECT_URI_DOMAIN}/oauth/callback`,
 			grant_type: 'authorization_code',
 		})
 
