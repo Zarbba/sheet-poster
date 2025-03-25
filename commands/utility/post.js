@@ -48,6 +48,5 @@ module.exports = {
 				`You need to grant me access before I can post from your sheet. Please go the the following link and follow the prompts: ${authorizationUrl}`
 			)
 		}
-		await interaction.reply('Placeholder.')
 	},
 }
