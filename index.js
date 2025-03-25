@@ -26,6 +26,7 @@ app.listen(process.env.PORT, () => {
 const mongoose = require(`mongoose`)
 mongoose.connect(process.env.MONGODB_URI)
 const Sheet = require('./models/Sheet')
+const {json} = require('node:stream/consumers')
 
 //----------------------- Redireciton Route
 app.get(`/oauth/callback`, async (req, res) => {
@@ -44,10 +45,9 @@ app.get(`/oauth/callback`, async (req, res) => {
 			grant_type: 'authorization_code',
 		})
 
-		res
-			.status(200)
-			.send('Authentication successful! You can close this window.')
-			.json(response)
+		const data = JSON.stringify(response)
+
+		res.status(200).send(`${response}`)
 	} catch (error) {}
 })
 
