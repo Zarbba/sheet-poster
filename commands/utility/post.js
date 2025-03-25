@@ -19,7 +19,6 @@ module.exports = {
 		const guildID = interaction.guild.id
 		const sheetName = interaction.options.getString('sheetname')
 		const targetSheet = await Sheet.findOne({guildID, sheetName})
-		console.log('🚀 ~ execute ~ targetSheet:', targetSheet)
 		if (!targetSheet) {
 			await interaction.reply(
 				`Oops! We couldn't find a sheet named ${sheetName} associated with your server. 

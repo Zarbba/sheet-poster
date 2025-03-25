@@ -47,7 +47,7 @@ app.get(`/oauth/callback`, async (req, res) => {
 
 		const data = JSON.stringify(response)
 
-		res.status(200).send(`${response}`)
+		res.status(200).send(`${data}`)
 	} catch (error) {}
 })
 
