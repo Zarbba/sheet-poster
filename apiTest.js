@@ -6,7 +6,7 @@ require('dotenv').config
 // Replace these with your credentials and spreadsheet details
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
-const REDIRECT_URI = `http://${process.env.REDIRECT_URI_DOMAIN}/oauth/callback`
+const REDIRECT_URI = `${process.env.REDIRECT_URI_DOMAIN}/oauth/callback`
 const REFRESH_TOKEN = 'YOUR_REFRESH_TOKEN'
 const SPREADSHEET_ID = '1PWy_Rz_9XShJvxdHBGSYDreEItuWBFWZAv8BkUty4zQ'
 const RANGE = 'Sheet1!A1' // Adjust the range as needed
