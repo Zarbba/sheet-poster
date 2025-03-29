@@ -1,4 +1,11 @@
-const {SlashCommandBuilder} = require('discord.js')
+const {
+	SlashCommandBuilder,
+	Events,
+	ModalBuilder,
+	TextInputBuilder,
+	TextInputStyle,
+	ActionRowBuilder,
+} = require('discord.js')
 const Sheet = require('../../models/Sheet')
 require('dotenv').config()
 const {google} = require('googleapis')
@@ -44,9 +51,26 @@ module.exports = {
 				include_granted_scopes: true,
 				state,
 			})
-			await interaction.reply(
-				`You need to grant me access before I can post from your sheet. Please go the the following link and follow the prompts: ${authorizationUrl}`
-			)
+
+			const refreshTokenModal = new ModalBuilder()
+				.setCustomId('refreshTokenModal')
+				.setTitle('Refresh Token Required')
+
+			const refreshTokenInput = new TextInputBuilder()
+				.setCustomId('refreshTokenInput')
+				.setLabel(
+					`You need to grant me access before I can post from your sheet. 
+					Please go the the following link and follow the prompts to get your refresh token
+					then provide it in the field bellow: ${authorizationUrl}`
+				)
+				.setStyle(TextInputStyle.Short)
 		}
+
+		const firstActionRow = new ActionRowBuilder().addComponents(
+			refreshTokenInput
+		)
+		modal.addComponents(firstActionRow)
+
+		await interaction.showModal(modal)
 	},
 }
