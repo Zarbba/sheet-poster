@@ -62,10 +62,12 @@ module.exports = {
 			)
 
 			await interaction.reply(
+				{
+					components: [firstActionRow],
+				},
 				`You need to grant me access before I can post from your sheet.
 					Please go the the following link and follow the prompts to get your refresh token
-					then provide it in the field bellow: ${authorizationUrl}`,
-				{components: [firstActionRow]}
+					then provide it in the field bellow: ${authorizationUrl}`
 			)
 		}
 	},
