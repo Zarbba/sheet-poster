@@ -58,11 +58,7 @@ module.exports = {
 
 			const refreshTokenInput = new TextInputBuilder()
 				.setCustomId('refreshTokenInput')
-				.setLabel(
-					`You need to grant me access before I can post from your sheet. 
-					Please go the the following link and follow the prompts to get your refresh token
-					then provide it in the field bellow: ${authorizationUrl}`
-				)
+				.setLabel(`Test`)
 				.setStyle(TextInputStyle.Short)
 		}
 
