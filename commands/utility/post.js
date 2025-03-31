@@ -32,10 +32,10 @@ module.exports = {
 		const sheetName = interaction.options.getString('sheetname')
 		const targetSheet = await Sheet.findOne({guildID, sheetName})
 		if (!targetSheet) {
-			await interaction.reply(
-				`Oops! We couldn't find a sheet named ${sheetName} associated with your server. 
-				You can use the listsheets command to see all the sheets currently associated with your server.`
-			)
+			await interaction.reply({
+				content: `Oops! We couldn't find a sheet named ${sheetName} associated with your server. You can use the listsheets command to see all the sheets currently associated with your server.`,
+				flags: MessageFlags.Ephemeral,
+			})
 			return
 		}
 
