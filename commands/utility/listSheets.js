@@ -1,4 +1,4 @@
-const {SlashCommandBuilder} = require('discord.js')
+const {SlashCommandBuilder, MessageFlags} = require('discord.js')
 const Sheet = require('../../models/Sheet')
 
 module.exports = {
@@ -19,11 +19,15 @@ module.exports = {
 					}\n`)
 			)
 			console.log(displayString)
-			await interaction.reply(`${displayString}`)
+			await interaction.reply({
+				content: `${displayString}`,
+				flags: MessageFlags.Ephemeral,
+			})
 		} else {
-			await interaction.reply(
-				`There are currently no sheets associated with this server.`
-			)
+			await interaction.reply({
+				content: `There are currently no sheets associated with this server.`,
+				flags: MessageFlags.Ephemeral,
+			})
 		}
 	},
 }

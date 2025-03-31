@@ -1,4 +1,4 @@
-const {SlashCommandBuilder} = require('discord.js')
+const {SlashCommandBuilder, MessageFlags} = require('discord.js')
 const Sheet = require('../../models/Sheet')
 
 module.exports = {
@@ -33,13 +33,15 @@ module.exports = {
 			}
 		)
 		if (!updatedSheet || updatedSheet.matchedCount === 0) {
-			await interaction.reply(
-				`I couldn't find a sheet named ${sheetName} associated with your server.`
-			)
+			await interaction.reply({
+				flags: MessageFlags.Ephemeral,
+				content: `I couldn't find a sheet named ${sheetName} associated with your server.`,
+			})
 		} else {
-			await interaction.reply(
-				`The sheet named ${sheetName} has been updated to have a target range of ${targetRange}`
-			)
+			await interaction.reply({
+				content: `The sheet named ${sheetName} has been updated to have a target range of ${targetRange}`,
+				flags: MessageFlags.Ephemeral,
+			})
 		}
 	},
 }

@@ -14,7 +14,6 @@ const sheetSchema = new mongoose.Schema({
 		required: true,
 	},
 	targetRange: String,
-	accessToken: String,
 	refreshToken: String,
 })
 

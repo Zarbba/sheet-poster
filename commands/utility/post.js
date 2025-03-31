@@ -8,6 +8,8 @@ const {
 	ButtonBuilder,
 	ButtonStyle,
 	Component,
+	MessageFlags,
+	Client,
 } = require('discord.js')
 const Sheet = require('../../models/Sheet')
 require('dotenv').config()
@@ -95,29 +97,45 @@ module.exports = {
 				content: `I need permission before I can do that. Open the link provided to acquire a refresh token, then provide that to me so I can gain access.`,
 				components: [messageActionRow],
 				withResponse: true,
+				flags: MessageFlags.Ephemeral,
 			})
 
 			const collectorFilter = (i) => i.user.id === interaction.user.id
 
-			try {
-				const confirmation =
-					await response.resource.message.awaitMessageComponent({
-						filter: collectorFilter,
-						time: 900_000,
-					})
+			const confirmation =
+				await response.resource.message.awaitMessageComponent({
+					filter: collectorFilter,
+					time: 900_000,
+				})
 
-				if (confirmation.customId === 'openModalButton') {
-					await confirmation.showModal(refreshTokenModal)
-				} else if (confirmation.customId === 'cancel') {
-					await confirmation.update({
-						content: 'Action cancelled',
-						components: [],
+			if (confirmation.customId === 'openModalButton') {
+				await confirmation.showModal(refreshTokenModal)
+				await confirmation
+					.awaitModalSubmit({
+						time: 900_000,
+						filter: collectorFilter,
 					})
-				}
-			} catch {
-				await interaction.editReply({
-					content: 'Confirmation not received within 15 minutes, cancelling',
+					.then(async (modalResponse) => {
+						modalResponse.reply('Thank you for providing a refresh token.')
+						const refreshToken =
+							modalResponse.fields.getTextInputValue('refreshTokenInput')
+						targetSheet.refreshToken = refreshToken
+						await targetSheet.save()
+					})
+					.catch((err) => {
+						console.log(err)
+						confirmation.editReply({
+							content: 'No submission was received in the allowed time.',
+							flags: MessageFlags.Ephemeral,
+						})
+					})
+				try {
+				} catch (err) {}
+			} else if (confirmation.customId === 'cancel') {
+				await confirmation.update({
+					content: 'Action cancelled',
 					components: [],
+					flags: MessageFlags.Ephemeral,
 				})
 			}
 		}

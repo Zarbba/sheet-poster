@@ -1,4 +1,4 @@
-const {SlashCommandBuilder} = require('discord.js')
+const {SlashCommandBuilder, MessageFlags} = require('discord.js')
 const Sheet = require('../../models/Sheet')
 
 module.exports = {
@@ -28,9 +28,15 @@ module.exports = {
 			guildID,
 		})
 		if (newSheet) {
-			await interaction.reply(`${sheetName} created successfully.`)
+			await interaction.reply({
+				content: `${sheetName} created successfully.`,
+				flags: MessageFlags.Ephemeral,
+			})
 		} else {
-			await interaction.reply(`Sheet creation failed.`)
+			await interaction.reply({
+				content: `Sheet creation failed.`,
+				flags: MessageFlags.Ephemeral,
+			})
 		}
 	},
 }
