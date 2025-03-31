@@ -3,6 +3,11 @@ const {
 	TextInputBuilder,
 	TextInputStyle,
 	ActionRowBuilder,
+	ModalBuilder,
+	EmbedBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	Component,
 } = require('discord.js')
 const Sheet = require('../../models/Sheet')
 require('dotenv').config()
@@ -50,18 +55,71 @@ module.exports = {
 				state,
 			})
 
-			//
+			const refreshTokenModal = new ModalBuilder()
+				.setCustomId('refreshTokenModal')
+				.setTitle('Provide Refresh Token')
+
 			const refreshTokenInput = new TextInputBuilder()
 				.setCustomId('refreshTokenInput')
 				.setLabel('Your refresh token:')
-
 				.setStyle(TextInputStyle.Short)
 
-			const firstActionRow = new ActionRowBuilder().addComponents(
+			const modalActionRow = new ActionRowBuilder().addComponents(
 				refreshTokenInput
 			)
 
-			await interaction.reply({components: [firstActionRow]})
+			refreshTokenModal.addComponents(modalActionRow)
+
+			const cancel = new ButtonBuilder()
+				.setCustomId('cancel')
+				.setLabel('Cancel')
+				.setStyle(ButtonStyle.Secondary)
+
+			const authLinkButton = new ButtonBuilder()
+				.setLabel('Acquire Refresh Token')
+				.setURL(`${authorizationUrl}`)
+				.setStyle(ButtonStyle.Link)
+
+			const openModalButton = new ButtonBuilder()
+				.setCustomId('openModalButton')
+				.setLabel('Provide Refresh Token')
+				.setStyle(ButtonStyle.Primary)
+
+			const messageActionRow = new ActionRowBuilder().addComponents(
+				cancel,
+				authLinkButton,
+				openModalButton
+			)
+
+			const response = await interaction.reply({
+				content: `I need permission before I can do that. Open the link provided to acquire a refresh token, then provide that to me so I can gain access.`,
+				components: [messageActionRow],
+				withResponse: true,
+			})
+
+			const collectorFilter = (i) => i.user.id === interaction.user.id
+
+			try {
+				const confirmation =
+					await response.resource.message.awaitMessageComponent({
+						filter: collectorFilter,
+						time: 900_000,
+					})
+
+				if (confirmation.customId === 'openModalButton') {
+					await confirmation.showModal(refreshTokenModal)
+				} else if (confirmation.customId === 'cancel') {
+					await confirmation.update({
+						content: 'Action cancelled',
+						components: [],
+					})
+				}
+			} catch {
+				await interaction.editReply({
+					content: 'Confirmation not received within 15 minutes, cancelling',
+					components: [],
+				})
+			}
 		}
 	},
 }
