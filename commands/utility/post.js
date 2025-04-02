@@ -143,13 +143,14 @@ module.exports = {
 		}
 
 		oauth2Client.setCredentials({refresh_token: targetSheet.refreshToken})
+		let values
 		try {
 			const response = await sheets.spreadsheets.values.get({
 				auth: oauth2Client,
 				spreadsheetId: targetSheet.sheetID,
 				range: targetSheet.targetRange,
 			})
-			const values = response.data.values
+			values = response.data.values
 			console.log('🚀 ~ execute ~ values:', values)
 		} catch (err) {
 			console.error('Error fetching values:', err)
