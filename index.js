@@ -74,9 +74,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	try {
 		await command.execute(interaction)
 	} catch (error) {
-		console.log(
-			`SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON `
-		)
 		console.error(error)
 		if (interaction.replied || interaction.deferred) {
 			await interaction.followUp({
