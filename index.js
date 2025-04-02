@@ -13,7 +13,6 @@ const foldersPath = path.join(__dirname, 'commands')
 const commandFolders = fs.readdirSync(foldersPath)
 const express = require(`express`)
 const app = express()
-const axios = require(`axios`)
 
 //----------------------- Express - Config
 app.use(express.urlencoded({extended: true}))
