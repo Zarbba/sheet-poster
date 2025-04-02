@@ -157,7 +157,7 @@ module.exports = {
 			console.error('Error fetching values:', err)
 		}
 		if (isFirstAuth) {
-			await interaction.followup(`${values.join(', ')}`)
+			await interaction.update(`${values.join(', ')}`)
 		} else {
 			await interaction.reply(`${values.join(', ')}`)
 		}
