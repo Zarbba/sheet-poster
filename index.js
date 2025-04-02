@@ -33,11 +33,7 @@ app.get(`/oauth/callback`, async (req, res) => {
 	console.log(req.query)
 	console.log(req.params)
 
-	if (!authorizationCode) {
-		return res.status(400).send('Authorization code not found.')
-	}
-
-	res.status(200).send(`${authorizationCode}`)
+	res.status(200).send(`Test`)
 })
 
 //----------------------- Discord - Config
