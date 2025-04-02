@@ -150,8 +150,9 @@ module.exports = {
 				spreadsheetId: targetSheet.sheetID,
 				range: targetSheet.targetRange,
 			})
-			const values = response.data.values
-			console.log('🚀 ~ execute ~ values:', values)
+			console.log('🚀 ~ execute ~ response:', response)
+			// const values = response.data.values
+			// console.log('🚀 ~ execute ~ values:', values)
 		} catch (err) {
 			console.error('Error fetching values:', err)
 		}
