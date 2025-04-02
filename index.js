@@ -30,7 +30,8 @@ const {json} = require('node:stream/consumers')
 
 //----------------------- Redireciton Route
 app.get(`/oauth/callback`, async (req, res) => {
-	const authorizationCode = req.query.code
+	console.log(req.query)
+	console.log(req.params)
 
 	if (!authorizationCode) {
 		return res.status(400).send('Authorization code not found.')
