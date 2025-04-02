@@ -151,11 +151,10 @@ module.exports = {
 				range: targetSheet.targetRange,
 			})
 			values = response.data.values
-			console.log('🚀 ~ execute ~ values:', values)
 		} catch (err) {
 			console.error('Error fetching values:', err)
 		}
 
-		await interaction.reply(`${values}`)
+		await interaction.reply(`${values.join('\n')}`)
 	},
 }
