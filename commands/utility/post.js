@@ -76,7 +76,7 @@ module.exports = {
 				.setStyle(ButtonStyle.Secondary)
 
 			const authLinkButton = new ButtonBuilder()
-				.setLabel('Acquire Refresh Token')
+				.setLabel('Acquire Authorization Code')
 				.setURL(`${authorizationUrl}`)
 				.setStyle(ButtonStyle.Link)
 
@@ -119,10 +119,11 @@ module.exports = {
 						)
 						const code = modalResponse.fields.getTextInputValue('codeInput')
 
-						let {tokens} = await oauth2Client.getToken(code)
-						console.log('🚀 ~ .then ~ tokens:', tokens)
-						// targetSheet.refreshToken = refreshToken
-						// await targetSheet.save()
+						const {tokens} = await oauth2Client.getToken(code)
+						const {refreshToken: refresh_token, accessToken: access_token} =
+							tokens
+						targetSheet.refreshToken = refreshToken
+						await targetSheet.save()
 					})
 					.catch((err) => {
 						console.log(err)
