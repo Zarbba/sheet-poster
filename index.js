@@ -30,7 +30,6 @@ const {json} = require('node:stream/consumers')
 //----------------------- Redireciton Route
 app.get(`/oauth/callback`, async (req, res) => {
 	const authorizationCode = req.query.code
-	console.log('🚀 ~ app.get ~ authorizationCode:', authorizationCode)
 
 	res.status(200).send(`${authorizationCode}`)
 })

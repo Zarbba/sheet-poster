@@ -57,20 +57,18 @@ module.exports = {
 				state,
 			})
 
-			const refreshTokenModal = new ModalBuilder()
-				.setCustomId('refreshTokenModal')
-				.setTitle('Provide Refresh Token')
+			const codeModal = new ModalBuilder()
+				.setCustomId('codeModal')
+				.setTitle('Provide Authorization Code')
 
-			const refreshTokenInput = new TextInputBuilder()
-				.setCustomId('refreshTokenInput')
-				.setLabel('Your refresh token:')
+			const codeInput = new TextInputBuilder()
+				.setCustomId('codeInput')
+				.setLabel('Your authorization code:')
 				.setStyle(TextInputStyle.Short)
 
-			const modalActionRow = new ActionRowBuilder().addComponents(
-				refreshTokenInput
-			)
+			const modalActionRow = new ActionRowBuilder().addComponents(codeInput)
 
-			refreshTokenModal.addComponents(modalActionRow)
+			codeModal.addComponents(modalActionRow)
 
 			const cancel = new ButtonBuilder()
 				.setCustomId('cancel')
@@ -84,7 +82,7 @@ module.exports = {
 
 			const openModalButton = new ButtonBuilder()
 				.setCustomId('openModalButton')
-				.setLabel('Provide Refresh Token')
+				.setLabel('Provide Authorization Code')
 				.setStyle(ButtonStyle.Primary)
 
 			const messageActionRow = new ActionRowBuilder().addComponents(
@@ -94,50 +92,54 @@ module.exports = {
 			)
 
 			const response = await interaction.reply({
-				content: `I need permission before I can do that. Open the link provided to acquire a refresh token, then provide that to me so I can gain access.`,
+				content: `I need permission before I can do that. Please go to the link below, follow the prompts and provide me with the authorization code.`,
 				components: [messageActionRow],
 				withResponse: true,
 				flags: MessageFlags.Ephemeral,
 			})
 
-			// const collectorFilter = (i) => i.user.id === interaction.user.id
+			const collectorFilter = (i) => i.user.id === interaction.user.id
 
-			// const confirmation =
-			// 	await response.resource.message.awaitMessageComponent({
-			// 		filter: collectorFilter,
-			// 		time: 900_000,
-			// 	})
+			const confirmation =
+				await response.resource.message.awaitMessageComponent({
+					filter: collectorFilter,
+					time: 900_000,
+				})
 
-			// if (confirmation.customId === 'openModalButton') {
-			// 	await confirmation.showModal(refreshTokenModal)
-			// 	await confirmation
-			// 		.awaitModalSubmit({
-			// 			time: 900_000,
-			// 			filter: collectorFilter,
-			// 		})
-			// 		.then(async (modalResponse) => {
-			// 			modalResponse.reply('Thank you for providing a refresh token.')
-			// 			const refreshToken =
-			// 				modalResponse.fields.getTextInputValue('refreshTokenInput')
-			// 			targetSheet.refreshToken = refreshToken
-			// 			await targetSheet.save()
-			// 		})
-			// 		.catch((err) => {
-			// 			console.log(err)
-			// 			confirmation.editReply({
-			// 				content: 'No submission was received in the allowed time.',
-			// 				flags: MessageFlags.Ephemeral,
-			// 			})
-			// 		})
-			// 	try {
-			// 	} catch (err) {}
-			// } else if (confirmation.customId === 'cancel') {
-			// 	await confirmation.update({
-			// 		content: 'Action cancelled',
-			// 		components: [],
-			// 		flags: MessageFlags.Ephemeral,
-			// 	})
-			// }
+			if (confirmation.customId === 'openModalButton') {
+				await confirmation.showModal(codeModal)
+				await confirmation
+					.awaitModalSubmit({
+						time: 900_000,
+						filter: collectorFilter,
+					})
+					.then(async (modalResponse) => {
+						modalResponse.reply(
+							'Thank you for providing an authorization code.'
+						)
+						const code = modalResponse.fields.getTextInputValue('codeInput')
+
+						let {tokens} = await oauth2Client.getToken(code)
+						console.log('🚀 ~ .then ~ tokens:', tokens)
+						// targetSheet.refreshToken = refreshToken
+						// await targetSheet.save()
+					})
+					.catch((err) => {
+						console.log(err)
+						confirmation.editReply({
+							content: 'No submission was received in the allowed time.',
+							flags: MessageFlags.Ephemeral,
+						})
+					})
+				try {
+				} catch (err) {}
+			} else if (confirmation.customId === 'cancel') {
+				await confirmation.update({
+					content: 'Action cancelled',
+					components: [],
+					flags: MessageFlags.Ephemeral,
+				})
+			}
 		}
 	},
 }
