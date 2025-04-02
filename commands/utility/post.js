@@ -16,7 +16,7 @@ require('dotenv').config()
 const {google} = require('googleapis')
 const {OAuth2} = google.auth
 const crypto = require('crypto')
-const {sheets} = require('googleapis/build/src/apis/sheets')
+const {sheets} = require(google.sheets(`v4`))
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -29,7 +29,6 @@ module.exports = {
 				.setRequired(true)
 		),
 	async execute(interaction) {
-		let accessToken = null
 		const guildID = interaction.guild.id
 		const sheetName = interaction.options.getString('sheetname')
 		const targetSheet = await Sheet.findOne({guildID, sheetName})
@@ -46,10 +45,10 @@ module.exports = {
 			process.env.GOOGLE_CLIENT_SECRET,
 			`${process.env.REDIRECT_URI_DOMAIN}/oauth/callback`
 		)
-		const scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 		if (!targetSheet.refreshToken) {
 			const state = crypto.randomBytes(32).toString('hex')
+			const scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 			const authorizationUrl = oauth2Client.generateAuthUrl({
 				access_type: 'offline',
