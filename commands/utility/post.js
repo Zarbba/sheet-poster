@@ -45,8 +45,10 @@ module.exports = {
 			process.env.GOOGLE_CLIENT_SECRET,
 			`${process.env.REDIRECT_URI_DOMAIN}/oauth/callback`
 		)
+		let isFirstAuth = false
 
 		if (!targetSheet.refreshToken) {
+			isFirstAuth = true
 			const state = crypto.randomBytes(32).toString('hex')
 			const scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
@@ -154,7 +156,10 @@ module.exports = {
 		} catch (err) {
 			console.error('Error fetching values:', err)
 		}
-
-		await interaction.reply(`${values.join('\n')}`)
+		if (isFirstAuth) {
+			await interaction.followup(`${values.join(', ')}`)
+		} else {
+			await interaction.reply(`${values.join(', ')}`)
+		}
 	},
 }
