@@ -107,6 +107,11 @@ module.exports = {
 					time: 900_000,
 				})
 
+			console.log(
+				'🚀 ~ execute ~ confirmation.customId:',
+				confirmation.customId
+			)
+
 			if (confirmation.customId === 'openModalButton') {
 				await confirmation.showModal(codeModal)
 				await confirmation
@@ -115,9 +120,10 @@ module.exports = {
 						filter: collectorFilter,
 					})
 					.then(async (modalResponse) => {
-						modalResponse.reply(
-							'Thank you for providing an authorization code.'
-						)
+						modalResponse.reply({
+							content: 'Thank you for providing an authorization code.',
+							flags: MessageFlags.Ephemeral,
+						})
 						const code = modalResponse.fields.getTextInputValue('codeInput')
 
 						const {tokens} = await oauth2Client.getToken(code)
@@ -133,8 +139,6 @@ module.exports = {
 							flags: MessageFlags.Ephemeral,
 						})
 					})
-				try {
-				} catch (err) {}
 			} else if (confirmation.customId === 'cancel') {
 				await confirmation.update({
 					content: 'Action cancelled',
