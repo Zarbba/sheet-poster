@@ -100,44 +100,44 @@ module.exports = {
 				flags: MessageFlags.Ephemeral,
 			})
 
-			const collectorFilter = (i) => i.user.id === interaction.user.id
+			// const collectorFilter = (i) => i.user.id === interaction.user.id
 
-			const confirmation =
-				await response.resource.message.awaitMessageComponent({
-					filter: collectorFilter,
-					time: 900_000,
-				})
+			// const confirmation =
+			// 	await response.resource.message.awaitMessageComponent({
+			// 		filter: collectorFilter,
+			// 		time: 900_000,
+			// 	})
 
-			if (confirmation.customId === 'openModalButton') {
-				await confirmation.showModal(refreshTokenModal)
-				await confirmation
-					.awaitModalSubmit({
-						time: 900_000,
-						filter: collectorFilter,
-					})
-					.then(async (modalResponse) => {
-						modalResponse.reply('Thank you for providing a refresh token.')
-						const refreshToken =
-							modalResponse.fields.getTextInputValue('refreshTokenInput')
-						targetSheet.refreshToken = refreshToken
-						await targetSheet.save()
-					})
-					.catch((err) => {
-						console.log(err)
-						confirmation.editReply({
-							content: 'No submission was received in the allowed time.',
-							flags: MessageFlags.Ephemeral,
-						})
-					})
-				try {
-				} catch (err) {}
-			} else if (confirmation.customId === 'cancel') {
-				await confirmation.update({
-					content: 'Action cancelled',
-					components: [],
-					flags: MessageFlags.Ephemeral,
-				})
-			}
+			// if (confirmation.customId === 'openModalButton') {
+			// 	await confirmation.showModal(refreshTokenModal)
+			// 	await confirmation
+			// 		.awaitModalSubmit({
+			// 			time: 900_000,
+			// 			filter: collectorFilter,
+			// 		})
+			// 		.then(async (modalResponse) => {
+			// 			modalResponse.reply('Thank you for providing a refresh token.')
+			// 			const refreshToken =
+			// 				modalResponse.fields.getTextInputValue('refreshTokenInput')
+			// 			targetSheet.refreshToken = refreshToken
+			// 			await targetSheet.save()
+			// 		})
+			// 		.catch((err) => {
+			// 			console.log(err)
+			// 			confirmation.editReply({
+			// 				content: 'No submission was received in the allowed time.',
+			// 				flags: MessageFlags.Ephemeral,
+			// 			})
+			// 		})
+			// 	try {
+			// 	} catch (err) {}
+			// } else if (confirmation.customId === 'cancel') {
+			// 	await confirmation.update({
+			// 		content: 'Action cancelled',
+			// 		components: [],
+			// 		flags: MessageFlags.Ephemeral,
+			// 	})
+			// }
 		}
 	},
 }
