@@ -155,6 +155,6 @@ module.exports = {
 			console.error('Error fetching values:', err)
 		}
 
-		await interaction.reply(`Placeholder`)
+		await interaction.reply(`${values}`)
 	},
 }
