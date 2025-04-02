@@ -16,7 +16,7 @@ require('dotenv').config()
 const {google} = require('googleapis')
 const {OAuth2} = google.auth
 const crypto = require('crypto')
-const {sheets} = google.sheets(`v4`)
+const sheets = google.sheets('v4')
 
 module.exports = {
 	data: new SlashCommandBuilder()
