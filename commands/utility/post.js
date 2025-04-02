@@ -146,7 +146,7 @@ module.exports = {
 		oauth2Client.setCredentials({refresh_token: targetSheet.refreshToken})
 		try {
 			const response = await sheets.spreadsheets.values.get({
-				oauth2Client,
+				auth: oauth2Client,
 				spreadsheetId: targetSheet.sheetID,
 				range: targetSheet.targetRange,
 			})
