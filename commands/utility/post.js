@@ -28,6 +28,7 @@ module.exports = {
 				.setRequired(true)
 		),
 	async execute(interaction) {
+		let accessToken = null
 		const guildID = interaction.guild.id
 		const sheetName = interaction.options.getString('sheetname')
 		const targetSheet = await Sheet.findOne({guildID, sheetName})
@@ -120,8 +121,8 @@ module.exports = {
 						const code = modalResponse.fields.getTextInputValue('codeInput')
 
 						const {tokens} = await oauth2Client.getToken(code)
-						const {refreshToken: refresh_token, accessToken: access_token} =
-							tokens
+						accessToken = tokens.access_token
+						const refreshToken = tokens.refresh_token
 						targetSheet.refreshToken = refreshToken
 						await targetSheet.save()
 					})
