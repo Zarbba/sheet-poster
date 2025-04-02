@@ -40,15 +40,14 @@ module.exports = {
 			return
 		}
 
+		const oauth2Client = new OAuth2(
+			process.env.GOOGLE_CLIENT_ID,
+			process.env.GOOGLE_CLIENT_SECRET,
+			`${process.env.REDIRECT_URI_DOMAIN}/oauth/callback`
+		)
+		const scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+
 		if (!targetSheet.refreshToken) {
-			const oauth2Client = new OAuth2(
-				process.env.GOOGLE_CLIENT_ID,
-				process.env.GOOGLE_CLIENT_SECRET,
-				`${process.env.REDIRECT_URI_DOMAIN}/oauth/callback`
-			)
-
-			const scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-
 			const state = crypto.randomBytes(32).toString('hex')
 
 			const authorizationUrl = oauth2Client.generateAuthUrl({
@@ -107,11 +106,6 @@ module.exports = {
 					time: 900_000,
 				})
 
-			console.log(
-				'🚀 ~ execute ~ confirmation.customId:',
-				confirmation.customId
-			)
-
 			if (confirmation.customId === 'openModalButton') {
 				await confirmation.showModal(codeModal)
 				await confirmation
@@ -147,5 +141,7 @@ module.exports = {
 				})
 			}
 		}
+
+		oauth2Client.setCredentials({refresh_token: targetSheet.refreshToken})
 	},
 }

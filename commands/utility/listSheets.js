@@ -18,7 +18,6 @@ module.exports = {
 						sheet.targetRange ? sheet.targetRange : 'None'
 					}\n`)
 			)
-			console.log(displayString)
 			await interaction.reply({
 				content: `${displayString}`,
 				flags: MessageFlags.Ephemeral,
