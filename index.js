@@ -36,20 +36,8 @@ app.get(`/oauth/callback`, async (req, res) => {
 		return res.status(400).send('Authorization code not found.')
 	}
 
-	try {
-		const response = await axios.post('https://oauth2.googleapis.com/token', {
-			code: authorizationCode,
-			client_id: process.env.GOOGLE_CLIENT_ID,
-			client_secret: process.env.GOOGLE_CLIENT_SECRET,
-			redirect_uri: `${process.env.REDIRECT_URI_DOMAIN}/oauth/callback`,
-			grant_type: 'authorization_code',
-		})
-
-		const data = JSON.stringify(response)
-
-		res.status(200).send(`${data}`)
-	} catch (error) {}
-})
+	res.status(200).send(`${authorizationCode}`)
+}
 
 //----------------------- Discord - Config
 const client = new Client({
