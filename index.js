@@ -9,12 +9,10 @@ const {
 require('dotenv').config()
 const fs = require('node:fs')
 const path = require('node:path')
-const foldersPath = path.join(__dirname, 'commands')
-const commandFolders = fs.readdirSync(foldersPath)
 const express = require(`express`)
-const app = express()
 
 //----------------------- Express - Config
+const app = express()
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 app.listen(process.env.PORT, () => {
@@ -27,13 +25,6 @@ mongoose.connect(process.env.MONGODB_URI)
 const Sheet = require('./models/Sheet')
 const {json} = require('node:stream/consumers')
 
-//----------------------- Redireciton Route
-app.get(`/oauth/callback`, async (req, res) => {
-	const authorizationCode = req.query.code
-
-	res.status(200).send(`${authorizationCode}`)
-})
-
 //----------------------- Discord - Config
 const client = new Client({
 	intents: [
@@ -42,6 +33,8 @@ const client = new Client({
 		GatewayIntentBits.MessageContent,
 	],
 })
+const foldersPath = path.join(__dirname, 'commands')
+const commandFolders = fs.readdirSync(foldersPath)
 
 client.commands = new Collection()
 
@@ -68,7 +61,7 @@ client.once(Events.ClientReady, (readyClient) => {
 })
 client.login(process.env.DISCORD_TOKEN)
 
-//----------------------- Discord - Load Slash commands
+//----------------------- Discord - Handle Slash commands
 client.on(Events.InteractionCreate, async (interaction) => {
 	if (!interaction.isChatInputCommand()) return
 
@@ -81,6 +74,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 	try {
 		await command.execute(interaction)
 	} catch (error) {
+		console.log(
+			`SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON SCREAMING LEMON `
+		)
 		console.error(error)
 		if (interaction.replied || interaction.deferred) {
 			await interaction.followUp({
@@ -94,4 +90,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
 			})
 		}
 	}
+})
+
+//----------------------- Express - Redireciton Route
+app.get(`/oauth/callback`, async (req, res) => {
+	const authorizationCode = req.query.code
+
+	res.status(200).send(`${authorizationCode}`)
 })
