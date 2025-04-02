@@ -16,6 +16,7 @@ require('dotenv').config()
 const {google} = require('googleapis')
 const {OAuth2} = google.auth
 const crypto = require('crypto')
+const {sheets} = require('googleapis/build/src/apis/sheets')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -143,5 +144,16 @@ module.exports = {
 		}
 
 		oauth2Client.setCredentials({refresh_token: targetSheet.refreshToken})
+		try {
+			const response = await sheets.spreadsheets.values.get({
+				oauth2Client,
+				spreadsheetId: targetSheet.sheetID,
+				range: targetSheet.targetRange,
+			})
+			const values = response.data.values
+			console.log('🚀 ~ execute ~ values:', values)
+		} catch (err) {
+			console.error('Error fetching values:', err)
+		}
 	},
 }
