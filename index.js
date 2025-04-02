@@ -37,7 +37,7 @@ app.get(`/oauth/callback`, async (req, res) => {
 	}
 
 	res.status(200).send(`${authorizationCode}`)
-}
+})
 
 //----------------------- Discord - Config
 const client = new Client({
